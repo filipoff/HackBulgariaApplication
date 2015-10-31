@@ -1,7 +1,6 @@
 #include <utility>
 #include <string>
 #include <iostream>
-#include "Table.h"
 
 std::pair<int, int> points(int currentX, int currentY, std::string input)
 {
@@ -34,11 +33,10 @@ std::pair<int, int> points(int currentX, int currentY, std::string input)
 
 int main()
 {
-//	std::string test(">>><<<~>>>~^^^");
-//	std::pair<int, int> result = points(0, 0, test);
-//	std::cout << result.first << ' ' << result.second << std::endl;
-	Table T("table.txt");
-	std::cout << T.countWordOccurrences("ivan");
+
+	std::string test(">>><<<~>>>~^^^");
+	std::pair<int, int> result = points(0, 0, test);
+	std::cout << result.first << ' ' << result.second << std::endl;
 
 	return 0;
 }
