@@ -1,6 +1,6 @@
 #pragma once
 #include <fstream>
-#include <string>
+
 class Table
 {
 private:
@@ -14,7 +14,7 @@ private:
 	void copyFrom(const Table& other);
 	void setTableFromFile(std::istream &in);
 	bool getTableSizeFromFile(std::istream &in, size_t& newHeight, size_t& newWidth) const;
-	const char* rstrstr(const char* string, const char* substring) const;
+	char* reversedCopy(const char* str) const;
 public:
 	Table();
 	Table(const char* filename);

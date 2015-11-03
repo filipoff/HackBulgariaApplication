@@ -5,6 +5,6 @@
 int main()
 {
 	Table table("table.txt");
-	std::cout << table.countWordOccurrences();
+	std::cout << table.countWordOccurrences("ivan");
 	return 0;
 }

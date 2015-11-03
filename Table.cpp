@@ -152,34 +152,35 @@ bool Table::loadFromFileName(const char* filename)
 	return true;
 }
 
-const char* Table::rstrstr(const char* string, const char* substring) const
+char* Table::reversedCopy(const char* str) const
 {
-	size_t string_len = strlen(string);
-	size_t substring_len = strlen(substring);
-	if (substring_len > string_len)
-		return NULL;
-
-	for (const char* pointer = string + string_len - substring_len; pointer >= string; pointer--)
+	size_t str_len = strlen(str);
+	char* reversed = new char[str_len + 1];
+	const char* end = str + str_len - 1;
+	for (size_t i = 0; end >= str; end--, i++)
 	{
-		if (strncmp(pointer, substring, substring_len) == 0)
-		{
-			return pointer;
-		}
+		reversed[i] = *end;
 	}
-	return NULL;
+	reversed[str_len] = '\0';
+	return reversed;
 }
 size_t Table::countWordOccurrences(const char* word) const
 {
 	size_t counter = 0;
+	char* reversedWord = reversedCopy(word);
+
+	// check the rows
 	for (size_t i = 0; i < rows; i++)
 	{
 		const char* row = table[i];
 		if (strstr(row, word) != NULL)
 			counter++;
-		if (rstrstr(row, word) != NULL)
+		if (strstr(row, reversedWord) != NULL)
 			counter++;
 	}
 
+
+	// check the columns
 	for (size_t i = 0; i < columns; i++)
 	{
 		char* column = new char[rows + 1];
@@ -187,14 +188,15 @@ size_t Table::countWordOccurrences(const char* word) const
 		{
 			column[j] = table[j][i];
 		}
-		column[rows] = '\n';
+		column[rows] = '\0';
 		if (strstr(column, word) != NULL)
 			counter++;
-		if (rstrstr(column, word) != NULL)
+		if (strstr(column, reversedWord) != NULL)
 			counter++;
 		delete[] column;
 	}
 
 	// TODO: implement diagonals
+	delete[] reversedWord;
 	return counter;
 }
