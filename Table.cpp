@@ -166,7 +166,7 @@ char* Table::reversedCopy(const char* str) const
 }
 size_t Table::countWordOccurrences(const char* word) const
 {
-	size_t counter = 0;
+	size_t wordOccurrences = 0;
 	char* reversedWord = reversedCopy(word);
 
 	// check the rows
@@ -174,9 +174,9 @@ size_t Table::countWordOccurrences(const char* word) const
 	{
 		const char* row = table[i];
 		if (strstr(row, word) != NULL)
-			counter++;
+			wordOccurrences++;
 		if (strstr(row, reversedWord) != NULL)
-			counter++;
+			wordOccurrences++;
 	}
 
 
@@ -184,19 +184,72 @@ size_t Table::countWordOccurrences(const char* word) const
 	for (size_t i = 0; i < columns; i++)
 	{
 		char* column = new char[rows + 1];
-		for (int j = 0; j < rows; j++)
+		for (size_t j = 0; j < rows; j++)
 		{
 			column[j] = table[j][i];
 		}
 		column[rows] = '\0';
 		if (strstr(column, word) != NULL)
-			counter++;
+			wordOccurrences++;
 		if (strstr(column, reversedWord) != NULL)
-			counter++;
+			wordOccurrences++;
 		delete[] column;
 	}
 
-	// TODO: implement diagonals
+	// left bottom to top right diagonal
+	for (int i = strlen(word) - rows; i < (int)columns; i++)
+	{
+		char* diagonalString = new char[std::min(rows, columns) + 1];
+		size_t diagonalStringIndex = 0;
+
+		for (int j = 0; j < (int)rows; j++)
+		{
+			if ((i + j) >= 0 && (i + j) < (int)columns)
+			{
+				diagonalString[diagonalStringIndex] = table[j][i + j];
+				diagonalStringIndex++;
+			}
+		}
+		diagonalString[diagonalStringIndex] = '\0';
+		if (diagonalStringIndex < strlen(word))
+		{
+			delete[] diagonalString;
+			break;
+		}
+		if (strstr(diagonalString, word) != NULL)
+			wordOccurrences++;
+		if (strstr(diagonalString, reversedWord) != NULL)
+			wordOccurrences++;
+		delete[] diagonalString;
+	}
+
+	// must be fixed
+	for (size_t i = columns + rows - 2; i >= 0; i--)
+	{
+		char* diagonalString = new char[std::min(rows, columns) + 1];
+		size_t diagonalStringIndex = 0;
+
+		for (size_t j = 0; j < rows; j++, i--)
+		{
+			if (true)
+			{
+				diagonalString[diagonalStringIndex] = table[j][j - i];
+				diagonalStringIndex++;
+			}
+		}
+		diagonalString[diagonalStringIndex] = '\0';
+		//	if (diagonalStringIndex < strlen(word))
+		//	{
+		//			delete[] diagonalString;
+		//		break;
+		//		}
+		if (strstr(diagonalString, word) != NULL)
+			wordOccurrences++;
+		if (strstr(diagonalString, reversedWord) != NULL)
+			wordOccurrences++;
+		delete[] diagonalString;
+	}
+
 	delete[] reversedWord;
-	return counter;
+	return wordOccurrences;
 }
